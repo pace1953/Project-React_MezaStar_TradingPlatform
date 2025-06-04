@@ -140,7 +140,8 @@ function Home() {
                         <li className='menu_list'><Link className='home-page-links' href='/'>首頁</Link></li>
                         <li className='menu_list'><a className='sell-page-links' onClick={handleSellModal}>販賣卡匣</a></li>
                         <li className='menu_list'><Link className='myorder-page-links' to='/myorders'>我的訂單</Link></li>
-                        <li className='menu_list'><Link className='cart-page-links'>購物車</Link></li>
+                        <li className='menu_list'><Link className='cart-page-links' to='/cart'>購物車</Link></li>
+                        <li className='menu_list'><Link className='machine-position-page-links' to='/machine-position'>機台位置</Link></li>
                     </ul>
                 </div>
 
