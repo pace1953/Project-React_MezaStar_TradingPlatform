@@ -4,6 +4,9 @@
     position: fixed;
     top: 0;
     left: 0;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
     z-index: 1000;
 }
 
@@ -33,6 +36,7 @@
     justify-content: flex-end;
     align-items: center;
     flex: 1;
+    margin-right: -30px;
 }
 
 .hamburger {
@@ -60,17 +64,28 @@
 .menu_list a {
     text-decoration: none;
     color: #333;
-    padding: 8px 12px;
+    padding: 8px 10px;
     border-radius: 4px;
     transition: background-color 0.3s;
 }
 
-.menu_list a.home-page-links {
+.menu_list a:hover {
+    background-color: #e9ecef;
+}
+
+.home-page-links {
     font-weight: bolder;
 }
 
-.menu_list a:hover {
-    background-color: #e9ecef;
+.cart_menu_list {
+    cursor: default;
+}
+
+.home-page-links,
+.sell-page-links,
+.myorder-page-links,
+.cart-page-links {
+    cursor: pointer;
 }
 
 .loginlogout_button_container {
@@ -78,7 +93,8 @@
     margin-left: 5px;
 }
 
-.login_button, .logout_button {
+.login_button,
+.logout_button {
     text-decoration: none;
     color: white;
     background-color: #007bff;
@@ -90,12 +106,21 @@
     outline: none;
 }
 
-.login_button:hover, .logout_button:hover {
-    color:#007bff;
+.login_button:hover,
+.logout_button:hover {
+    color: #007bff;
     background-color: white;
 }
 
-.login_modal, .register_modal, .sell_modal {
+.user_info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.login_modal,
+.register_modal,
+.sell_modal {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -108,7 +133,9 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.login_modal_overlay, .register_modal_overlay, .sell_modal_overlay {
+.login_modal_overlay,
+.register_modal_overlay,
+.sell_modal_overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -117,6 +144,15 @@
     background-color: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(5px);
     z-index: 1001;
+}
+
+.sell_submit_button {
+    color: white;
+    background-color: #007bff;
+}
+.sell_submit_button:hover {
+    color: #007bff;
+    background-color: white;
 }
 
 .modal_h2 {
@@ -134,7 +170,7 @@
 }
 
 .modal_input {
-    display: block; 
+    display: block;
     width: 90%;
     padding: 10px;
     margin: 0 auto;
@@ -143,7 +179,8 @@
     border-bottom: #868686 solid 1px;
 }
 
-.modal_login_button, .modal_register_button {
+.modal_login_button,
+.modal_register_button {
     display: block;
     width: 85%;
     padding: 10px;
@@ -192,18 +229,34 @@
     cursor: pointer;
 }
 
-.modal_register, .modal_login {
+.modal_register,
+.modal_login {
     all: unset;
     cursor: pointer;
 }
 
-.home-page-links, .sell-page-links, .myorder-page-links, .cart-page-links{
-    cursor: pointer;
+.sell_input,
+.sell_select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    min-width: 120px;
 }
 
+.sell_form_group {
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
 
-/* ====== 響應式設計 ====== */
+.sell_form_buttons {
+    display: flex;
+    gap: 20px;
+    margin-left: 100px;
+    margin-top: 50px;
+}
 
+/* 響應式設計 */
 @media (max-width: 768px) {
     .hamburger {
         display: block;
@@ -231,7 +284,7 @@
         top: 100%;
         right: 0;
         background-color: whitesmoke;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         z-index: 999;
         border-radius: 4px;
         min-width: 200px;
@@ -302,9 +355,9 @@
         padding: 6px 12px;
     }
     
-    /* Modal 在手機上的調整 */
     .login_modal,
-    .register_modal {
+    .register_modal,
+    .sell_modal {
         width: 95%;
         max-width: 300px;
         height: auto;
@@ -322,7 +375,9 @@
     .modal_login_button,
     .modal_register_button,
     .modal_social_button_google,
-    .modal_social_button_discord {
+    .modal_social_button_discord,
+    .sell_submit_button,
+    .sell_cancel_button {
         width: 90%;
         padding: 12px;
         font-size: 16px;

@@ -1,9 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./home";
-import MyOrders from "./MyOrders";
-import Cart from "./Cart";
-import Machine from "./Machine";
+import MyOrders from "./Component/MyOrders";
+import Cart from "./Component/Cart";
+import Machine from "./Component/Machine";
 
 function AppRouter() {
   return (

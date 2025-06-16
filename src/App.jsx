@@ -1,8 +1,11 @@
-    import React from 'react';
-    import AppRouter from './AppRouter';
+import AppRouter from './AppRouter';
+import { ContextProvider } from './Context/ContextAPI';
 
     function App() {
-    return <AppRouter />;
-    }
+    return (
+        <ContextProvider>
+            <AppRouter />
+        </ContextProvider>
+    );}
 
     export default App;

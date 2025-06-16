@@ -1,132 +1,92 @@
-import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import './menu.css'
-import './search.css';
-import { Link } from 'react-router-dom';
+
+import './Css/menu.css';
+import './Css/search.css';
+import { Link, useLocation } from 'react-router-dom';
+import { useContextAPI } from './Context/ContextAPI';
+import { useEffect } from 'react';
 
 function Home() {
+    
+    const {
+        // 狀態
+        isLoggedIn,
+        setIsLoggedIn,
+        loginForm,
+        setLoginForm,
+        registerForm,
+        setRegisterForm,
 
-    // Modal
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [registermodalIsOpen, setRegisterModalIsOpen] = useState(false);
-    const [sellmodalIsOpen, setSellModalIsOpen] = useState(false);
-    const openModal = () => setModalIsOpen(true);
-    const closeModal = () => setModalIsOpen(false);
-    const openRegisterModal = () => setRegisterModalIsOpen(true);
-    const closeRegisterModal = () => setRegisterModalIsOpen(false);
-    const openSellModal = () => setSellModalIsOpen(true);
-    const closeSellModal = () => setSellModalIsOpen(false);
+        isMenuOpen,
+        setIsMenuOpen,
+        currentUser,
+        setCurrentUser,
 
-    // 登入, 註冊
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [loginForm, setLoginForm] = useState({ username: '', password: '' });
-    const [registerForm, setRegisterForm] = useState({ username: '', password: '', email: '' });
+        hasSearched,
+        setHasSearched,
 
-    // 響應式漢堡
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+        // Modal狀態
+        modalIsOpen,
+        setModalIsOpen,
+        registermodalIsOpen,
+        setRegisterModalIsOpen,
+        sellmodalIsOpen,
+        setSellModalIsOpen,
 
+        // Modal方法
+        openModal,
+        closeModal,
+        openRegisterModal,
+        closeRegisterModal,
+        openSellModal,
+        closeSellModal,
+
+        handleRegisterModalOpen,
+        handleLoginModalOpen,
+        handleSellModal,
+        handleCheckLogin,
+
+
+
+        // 卡匣資料
+        cards,
+        setCards,
+        searchForm,
+        setSearchForm,
+        minPrice,
+        setMinPrice,
+        maxPrice,
+        setMaxPrice,
+        sellForm,
+        setSellForm,
+
+        // 卡匣方法
+        loadAvailableCards,
+        handleSearchChange,
+        searchByMultipleCriteria,
+        handleSearch,
+        resetSearch,
+        handleSellFormChange,
+        handleSellSubmit,
+        
+        // 購物車方法
+        addToCart,
+
+        // 方法
+        checkLoginStatus,
+        handleLoginChange,
+        handleLoginSubmit,
+        handleRegisterChange,
+        handleRegisterSubmit,
+        handleLogout,
+    } = useContextAPI();
+
+    const location = useLocation();
+
+    // 透過ReactRouter的useLocation監聽 ->每次進入首頁都重置搜尋
     useEffect(() => {
-        // 檢查登入狀態
-        checkLoginStatus();
-    }, []);
-
-    // -- 登入用 ----------------------------------------------------------------------
-    // 檢查登入狀態(是否已經登入)
-    const checkLoginStatus = async () => {
-        try {
-        const res = await fetch('http://localhost:8888/rest/check-login', {
-            method: 'GET',
-            credentials: 'include'
-        });
-        const resData = await res.json();
-        setIsLoggedIn(resData.data);
-        } catch (err) {
-        setIsLoggedIn(false);
-        }
-    };
-
-    // 登入表單資料狀態改變
-    const handleLoginChange = (e) => {
-        const { name, value } = e.target;
-        // 只變更該欄位資料, 其他欄位仍保持原資料狀態
-        setLoginForm(prev => ({ ...prev, [name]: value }));
-    };
-
-    // 登入
-    const handleLoginSubmit = async (e) => {
-        e.preventDefault();
-        try {
-        const res = await fetch('http://localhost:8888/rest/login', {
-            method: 'POST',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams(loginForm)
-        });
-
-        const resData = await res.json();
-        if (res.ok && resData.status === 200) {
-            alert('登入成功');
-            setIsLoggedIn(true);
-            closeModal();
-        } else {
-            alert('登入失敗：' + resData.message);
-        }
-        } catch (err) {
-        alert('登入錯誤: ' + err.message);
-        }
-    };
-
-    // 註冊
-    const handleRegisterSubmit = async (e) => {
-    e.preventDefault();
-        try{
-            const res = await fetch('http://localhost:8888/rest/register', {
-                method: 'POST',
-                credentials: 'include',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams(registerForm)
-            });
-
-            const resData = await res.json();
-            if (res.ok && resData.status === 200) {
-                alert('註冊成功，請登入');
-                closeRegisterModal();
-                openModal();
-            } else {
-                alert('註冊失敗：' + resData.message);
-            }
-        } catch (error) {
-            console.error('註冊請求失敗:', error);
-            alert('註冊失敗：網路錯誤');
-        }
-    };
-    
-    // 新增註冊表單的資料狀態改變
-    const handleRegisterChange = (e) => {
-    const { name, value } = e.target;
-    setRegisterForm(prev => ({ ...prev, [name]: value }));
-    };
-
-    // 關閉登入的Modal，開啟註冊的Modal
-    const handleRegisterModalOpen = () => {
-        closeModal();
-        openRegisterModal();
-    }
-    // 關閉註冊的Modal，開啟登入的Modal
-    const handleLoginModalOpen = () => {
-        closeRegisterModal(); 
-        openModal();
-    }
-
-    // 如果登入狀態為true，則會打開sell_modal; false則會顯示請使用者先登入
-    const handleSellModal = () => {
-        if (isLoggedIn) {
-            openSellModal();
-        } else {
-            alert('請先登入');
-        }
-    }
-    
+        resetSearch();
+    }, [location.pathname])
 
     return (
         <div className='container'>
@@ -137,10 +97,10 @@ function Home() {
 
                 <div className={`nav_menu_container ${isMenuOpen ? 'menu-open' : ''}`}>
                     <ul className='nav_menu'>
-                        <li className='menu_list'><Link className='home-page-links' href='/'>首頁</Link></li>
+                        <li className='menu_list'><Link className='home-page-links' to='/'>首頁</Link></li>
                         <li className='menu_list'><a className='sell-page-links' onClick={handleSellModal}>販賣卡匣</a></li>
-                        <li className='menu_list'><Link className='myorder-page-links' to='/myorders'>我的訂單</Link></li>
-                        <li className='menu_list'><Link className='cart-page-links' to='/cart'>購物車</Link></li>
+                        <li className='menu_list'><Link className='myorder-page-links' to='/myorders' onClick={(e) => handleCheckLogin(e)}>我的訂單</Link></li>
+                        <li className='menu_list'><Link className='cart-page-links' to='/cart' onClick={(e) => handleCheckLogin(e)}>購物車</Link></li>
                         <li className='menu_list'><Link className='machine-position-page-links' to='/machine-position'>機台位置</Link></li>
                     </ul>
                 </div>
@@ -148,24 +108,9 @@ function Home() {
                 <div className='loginlogout_button_container'>
                     {
                         isLoggedIn ? (
-                            <div className='login_status'>
-                                <button className='logout_button' onClick={async () => {
-                                    try {
-                                        const res = await fetch('http://localhost:8888/rest/logout', {
-                                            method: 'GET',
-                                            credentials: 'include'
-                                        });
-                                        const resData = await res.json();
-                                        if (res.ok && resData.status === 200) {
-                                            alert(resData.message);
-                                            setIsLoggedIn(false);
-                                        } else {
-                                            alert('登出失敗：' + resData.message);
-                                        }
-                                    } catch (err) {
-                                        alert('登出錯誤: ' + err.message);
-                                    }
-                                }}>登出</button>
+                            <div className='user_info'>
+                                <a className='username'>{currentUser.username}</a>
+                                <button className='logout_button' onClick={handleLogout}>登出</button>
                             </div>
                         ) : (
                             <button className='login_button' onClick={openModal}>登入</button>
@@ -199,21 +144,236 @@ function Home() {
                     <span className='modal_span'>已經有帳號了嗎？<button className='modal_login' onClick={handleLoginModalOpen}>登入</button></span>
                 </Modal>
                 <Modal className='sell_modal' overlayClassName='sell_modal_overlay' isOpen={sellmodalIsOpen} onRequestClose={closeSellModal} >
-                    <h2>新增卡匣販賣清單</h2>
+                    <h2 className='modal_h2'>新增販賣卡匣</h2>
                     <button type="button" className='modal_close_button' onClick={closeSellModal}>X</button>
+                    
+                    <form onSubmit={handleSellSubmit} className='sell_form'>
+                        <div className='sell_form_group'>
+                            <label className='sell_label'>卡匣名稱：</label>
+                            <input 
+                                type="text" 
+                                name="cardName"
+                                value={sellForm.cardName}
+                                onChange={handleSellFormChange}
+                                placeholder="請輸入卡匣名稱"
+                                className='sell_input'
+                                required
+                            />
+                        </div>
+                        
+                        <div className='sell_form_group'>
+                            <label className='sell_label'>卡匣系列：</label>
+                            <select 
+                                name="series"
+                                value={sellForm.series}
+                                onChange={handleSellFormChange}
+                                className='sell_select'
+                                required
+                            >
+                                <option value="">請選擇系列</option>
+                                <option value="星塵第1彈">星塵第1彈</option>
+                                <option value="星塵第2彈">星塵第2彈</option>
+                                <option value="MEZASTAR活動卡匣">MEZASTAR活動卡匣</option>
+                            </select>
+                        </div>
+                        
+                        <div className='sell_form_group'>
+                            <label className='sell_label'>卡匣星級：</label>
+                            <select 
+                                name="starLevel"
+                                value={sellForm.starLevel}
+                                onChange={handleSellFormChange}
+                                className='sell_select'
+                                required
+                            >
+                                <option value="">請選擇星級</option>
+                                <option value="5">5星</option>
+                                <option value="6">6星</option>
+                                <option value="Special">Special</option>
+                            </select>
+                        </div>
+
+                        <div className='sell_form_group'>
+                            <label className='sell_label'>卡匣數量：</label>
+                            <input 
+                                type="number" 
+                                name="quantity"
+                                value={sellForm.quantity || ''}
+                                onChange={handleSellFormChange}
+                                placeholder="請輸入卡匣數量"
+                                className='sell_input'
+                                min="1"
+                                required
+                            />
+                        </div>
+                        
+                        <div className='sell_form_group'>
+                            <label className='sell_label'>售價 (NT$)：</label>
+                            <input 
+                                type="number" 
+                                name="price"
+                                value={sellForm.price}
+                                onChange={handleSellFormChange}
+                                placeholder="請輸入售價"
+                                className='sell_input'
+                                min="1"
+                                required
+                            />
+                        </div>
+                        
+                        <div className='sell_form_buttons'>
+                            <button type="submit" className='sell_submit_button'>
+                                上架販賣
+                            </button>
+                            <button type="button" onClick={closeSellModal} className='sell_cancel_button'>
+                                取消
+                            </button>
+                        </div>
+
+                    </form>
+
                 </Modal>
             </div>
                 
-            <div>
-                <div className='cardSearch_container'>
-                    <h2 className='cardSearch_title'>卡匣交易</h2>
-                    <div className='cardSearch_input_container'>
-                        <label className='cardSearch_label'>卡匣彈數</label>
+            <div className='cardSearch_container'>
+                <h2 className='cardSearch_title'>卡匣交易</h2>
+                <form onSubmit={handleSearch} className='cardSearch_form'>
+                <div className='cardSearch_input_container'>
+                    
+                    <div className='cardSearch_field'>
+                        <label className='cardSearch_label'>卡匣系列</label>
+                            <select name="series" value={searchForm.series} 
+                            onChange={handleSearchChange} 
+                            className='cardSearch_select'>
+                                <option value="">請選擇系列</option>
+                                <option value="星塵第1彈">星塵第1彈</option>
+                                <option value="星塵第2彈">星塵第2彈</option>
+                                <option value="MEZASTAR活動卡匣">MEZASTAR活動卡匣</option>
+                            </select>
+                    </div>
+
+                    <div className='cardSearch_field'>
                         <label className='cardSearch_label'>卡匣星數</label>
+                        <select 
+                            name="starLevel" 
+                            value={searchForm.starLevel} 
+                            onChange={handleSearchChange}
+                            className='cardSearch_select'>
+                            <option value="">請選擇星數</option>
+
+                            <option value="5">5星</option>
+                            <option value="6">6星</option>
+                            <option value="Special">Special</option>
+                        </select>
+                    </div>
+
+                    <div className='cardSearch_field'>
                         <label className='cardSearch_label'>卡匣名稱</label>
-                    </div>  
-                </div>
+                        <input 
+                            type="text" 
+                            name="cardName" 
+                            value={searchForm.cardName} 
+                            onChange={handleSearchChange}
+                            placeholder="請輸入卡匣名稱"
+                            className='cardSearch_input'
+                        />
+                    </div>
+
+                    <div className='cardSearch_field'>
+                        <label className='cardSearch_label'>價格範圍</label>
+                            <div className='price_range_container'>
+                                <input 
+                                    type="number" 
+                                    value={minPrice} 
+                                    onChange={(e) => setMinPrice(e.target.value)}
+                                    placeholder="最低價"
+                                    className='cardSearch_price_input'/>
+                                <span>~</span>
+                                <input 
+                                    type="number" 
+                                    value={maxPrice} 
+                                    onChange={(e) => setMaxPrice(e.target.value)}
+                                    placeholder="最高價"
+                                    className='cardSearch_price_input'/>
+                            </div>
+                        </div>
+                        <div className='cardSearch_button_container'>
+                            <button type="submit" className='search_button'>搜尋</button>
+                            <button type="button" onClick={resetSearch} className='reset_button'>重置</button>
+                        </div>
+                    </div>
+
+                </form>
+
+                    <div className='cards_container'>
+                        <h3 className='cards_title'>可購買的卡匣 ({cards.length})</h3>
+                        <div className='cards_grid'>
+
+                            {hasSearched ? 
+                                (cards.length > 0 ? (
+                                    <table className='cards_table'>
+                                        <thead className='table_header'>
+                                            <tr>
+                                                <th>狀態</th>
+                                                <th>卡匣名稱</th>
+                                                <th>系列</th>
+                                                <th>星級</th>
+                                                <th>數量</th>
+                                                <th>單價</th>
+                                                <th>賣家</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+
+                                    <tbody>
+                                        {cards.map(card => (
+                                            <tr key={card.cardId} className='card_row'>
+                                                <td >
+                                                    <span className='status_badge status_selling'>出售</span>
+                                                </td>
+                                                <td className='card_name'>{card.cardName}</td>
+                                                <td className='card_series'>
+                                                    <span className='card_series_text'>{card.series}</span>
+                                                </td>
+                                                <td className='card_star'>
+                                                    {card.starLevel === 'special' || card.starLevel === 'Special' 
+                                                    ? 'Special' : '★'.repeat(parseInt(card.starLevel))}
+                                                </td>
+
+                                                <td className='card_selling_number'>
+                                                    {card.availableQuantity || card.quantity || 1}
+                                                </td>
+
+                                                <td className='card_price'>NT$ {card.price.toLocaleString()}</td>
+                                                <td className='card_seller'>{card.sellerName || '未知'}</td>
+
+                                                <td>
+                                                    <button onClick={() => addToCart(card.cardId)}
+                                                            className='add_to_cart_button'
+                                                            disabled={!isLoggedIn}>
+                                                            {isLoggedIn ? '加入購物車' : '請先登入'}
+                                                    </button>
+                                                </td>
+
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                                ): (
+                                    <div className='no_cards'>
+                                        <p>沒有找到符合條件的卡匣</p>
+                                    </div>
+                                )
+                            ) : (
+                                <div className='no_cards'>
+                                    <p>開始搜尋</p>
+                                    <p>請輸入搜尋條件來尋找您想要的卡匣!</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
             </div>
+            
         </div>
     );
 }
