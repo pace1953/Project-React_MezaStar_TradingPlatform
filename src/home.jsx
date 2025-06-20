@@ -88,6 +88,8 @@ function Home() {
         resetSearch();
     }, [location.pathname])
 
+
+
     return (
         <div className='container'>
             <nav className='navbar'>
@@ -97,11 +99,11 @@ function Home() {
 
                 <div className={`nav_menu_container ${isMenuOpen ? 'menu-open' : ''}`}>
                     <ul className='nav_menu'>
-                        <li className='menu_list'><Link className='home-page-links' to='/'>首頁</Link></li>
-                        <li className='menu_list'><a className='sell-page-links' onClick={handleSellModal}>販賣卡匣</a></li>
-                        <li className='menu_list'><Link className='myorder-page-links' to='/myorders' onClick={(e) => handleCheckLogin(e)}>我的訂單</Link></li>
-                        <li className='menu_list'><Link className='cart-page-links' to='/cart' onClick={(e) => handleCheckLogin(e)}>購物車</Link></li>
-                        <li className='menu_list'><Link className='machine-position-page-links' to='/machine-position'>機台位置</Link></li>
+                        <li className='menu_list'><Link className='home_page_links' to='/'>首頁</Link></li>
+                        <li className='menu_list'><a className='sell_page_links' onClick={handleSellModal}>販賣卡匣</a></li>
+                        <li className='menu_list'><Link className='myorder_page_links' to='/myorders' onClick={(e) => handleCheckLogin(e)}>我的訂單</Link></li>
+                        <li className='menu_list'><Link className='cart_page_links' to='/cart' onClick={(e) => handleCheckLogin(e)}>購物車</Link></li>
+                        <li className='menu_list'><Link className='machine_position_page_links' to='/machine-position'>機台位置</Link></li>
                     </ul>
                 </div>
 

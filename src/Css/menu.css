@@ -73,18 +73,20 @@
     background-color: #e9ecef;
 }
 
-.home-page-links {
+.home_page_links {
     font-weight: bolder;
 }
 
-.cart_menu_list {
-    cursor: default;
+.user_info .username {
+    font-weight: 600;
+    color: #6366f1;
+    font-size: 16px;
 }
 
-.home-page-links,
-.sell-page-links,
-.myorder-page-links,
-.cart-page-links {
+.home_page_links,
+.sell_page_links,
+.myorder_page_links,
+.cart_page_links {
     cursor: pointer;
 }
 

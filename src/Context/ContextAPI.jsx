@@ -50,6 +50,17 @@ export const ContextProvider = ({ children }) => {
     // 購物車狀態
     const [cartItems, setCartItems] = useState([]);
 
+    // 訂單的狀態
+    const [buyerOrder, setBuyerOrder] = useState([]);
+    const [sellerOrder, setSellerOrder] = useState([]);
+
+    // 買賣家訂單的視窗狀態
+    const [activeTab, setActiveTab] = useState('buyer');
+
+    // 訂單的交易狀態
+    const [selectedStatus, setSelectedStatus] = useState('all');
+
+
     useEffect(() => {
         // 檢查登入狀態
         checkLoginStatus();
@@ -543,6 +554,59 @@ export const ContextProvider = ({ children }) => {
         }
     };
 
+    // 訂單--------------------------------------------------
+    // 買家訂單
+    const handleBuyerOrders = async () => {
+        if(!isLoggedIn) return;
+
+        try {
+            const res = await fetch('http://localhost:8888/rest/orders/my-orders',{
+                method: 'GET',
+                credentials: 'include'
+            });
+
+            const resData = await res.json();
+            if(res.ok && resData.status === 200){
+                setBuyerOrder(resData.data || []);
+            } else{
+                alert('獲取買家訂單資料失敗:'+resData.message);
+                setBuyerOrder([]);
+            }
+        } catch(err){
+            alert('獲取買家訂單資料錯誤:'+err)
+            setBuyerOrder([]);
+        }
+    } 
+
+    // 賣家訂單
+    const handleSellerOrders = async () =>{
+        if(!isLoggedIn) return;
+
+        try{
+            let url = 'http://localhost:8888/rest/orders/seller/my-sales';
+            if(selectedStatus !== 'all'){
+                url = `http://localhost:8888/rest/orders/seller/my-sales/status/${selectedStatus}`;
+            }
+
+            const res = await fetch(url, {
+                method: 'GET',
+                credentials: 'include'
+            });
+
+            const resData = await res.json();
+            if(res.ok && resData.status === 200){
+                setSellerOrder(resData.data || []);
+            } else{
+                alert('獲取賣家訂單資料失敗:'+resData.message);
+                setSellerOrder([]);
+            }
+        } catch{
+            alert('獲取賣家訂單資料錯誤:'+err)
+            setSellerOrder([]);
+        }
+    }
+
+
     const value = {
         // 登入/註冊狀態
         isLoggedIn,
@@ -572,6 +636,20 @@ export const ContextProvider = ({ children }) => {
         sellmodalIsOpen,
         setSellModalIsOpen,
 
+        // 購物車狀態
+        cartItems,
+        setCartItems,
+
+        // 訂單狀態
+        buyerOrder,
+        setBuyerOrder,
+        sellerOrder,
+        setSellerOrder,
+        activeTab,
+        setActiveTab,
+        selectedStatus,
+        setSelectedStatus,
+
         // Modal方法
         openModal,
         closeModal,
@@ -579,15 +657,10 @@ export const ContextProvider = ({ children }) => {
         closeRegisterModal,
         openSellModal,
         closeSellModal,
-
         handleRegisterModalOpen,
         handleLoginModalOpen,
         handleSellModal,
         handleCheckLogin,
-
-        // 購物車狀態
-        cartItems,
-        setCartItems,
 
         // 卡匣資料
         cards,
@@ -626,6 +699,12 @@ export const ContextProvider = ({ children }) => {
         handleRegisterChange,
         handleRegisterSubmit,
         handleLogout,
+
+        // 訂單方法
+        handleBuyerOrders,
+        handleSellerOrders,
+
+
 
     };
 

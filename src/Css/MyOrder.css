@@ -1,0 +1,505 @@
+.mos_container {
+    width: 100%;
+    margin: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 1000;
+    background-color: #f5f5f5;
+}
+
+.mos_navbar {
+    align-items: center;
+    width: 100%;
+    min-height: 4rem;
+    padding: .5rem;
+    display: flex;
+    gap: 50px;
+    justify-content: space-between;
+    background-color: whitesmoke;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1001;
+}
+
+.title {
+    margin-left: 20px;
+}
+
+.title a {
+    color: black;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.hamburger {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px;
+    color: #333;
+}
+
+.mos_navbar_container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    flex: 1;
+    margin-right: -20px;
+}
+
+.mos_nav_menu {
+    display: flex;
+    margin: 0;
+    list-style: none;
+    padding: 0;
+}
+
+.mos_menu_list {
+    display: flex;
+    padding: 0px 10px;
+}
+
+.mos_menu_list a {
+    text-decoration: none;
+    color: #333;
+    padding: 8px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.mos_menu_list .home_page_links {
+    font-weight: bolder;
+}
+
+.mos_menu_list .myorder_page_links {
+    cursor: default;
+    color: #6366f1;
+}
+
+.mos_menu_list .home_page_links,  
+.mos_menu_list .cart_page_links,
+.mos_menu_list .machine_position_page_links {
+    cursor: pointer;
+}
+
+.mos_menu_list .home_page_links:hover, 
+.mos_menu_list .cart_page_links:hover, 
+.mos_menu_list .machine_position_page_links:hover {
+    background-color: #e9ecef;
+}
+
+.mos_user_info {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.mos_user_info .username {
+    font-weight: 600;
+    color: #6366f1;
+    font-size: 16px;
+}
+
+.mos_order_content {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-top: 80px;
+}
+
+.mos_order_header {
+    margin-bottom: 2rem;
+}
+
+.mos_order_header h1 {
+    color: #333;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.mos_tab_buttons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.mos_tab_btn {
+    padding: 0.75rem 2rem;
+    border: 2px solid #007bff;
+    background-color: white;
+    color: #007bff;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.mos_tab_btn:hover {
+    background-color: white;
+}
+
+.mos_tab_btn.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.mos_status_filter {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.mos_status_filter label {
+    font-weight: 600;
+    color: #333;
+}
+
+.mos_status_select {
+    padding: 0.5rem 1rem;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: white;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.mos_status_select:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.mos_orders_main {
+    min-height: 400px;
+}
+
+.mos_orders_list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.mos_order_card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mos_order_card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.mos_order_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.mos_order_info h3 {
+    color: #333;
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.mos_order_time {
+    color: #666;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.mos_order_status {
+    display: flex;
+    align-items: center;
+}
+
+.mos_status_badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.mos_status_badge.待處理 {
+    background-color: #fef3c7;
+    color: #d97706;
+}
+
+.mos_status_badge.已完成 {
+    background-color: #dcfce7;
+    color: #16a34a;
+}
+
+.mos_status_badge.已取消 {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+.mos_order_details {
+    margin-bottom: 1rem;
+}
+
+.mos_order_parties {
+    margin-bottom: 0.75rem;
+}
+
+.mos_order_parties p {
+    margin: 0;
+    color: #555;
+    font-size: 1rem;
+}
+
+.mos_card_info {
+    background-color: #f8fafc;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    border-left: 4px solid #007bff;
+}
+
+.mos_card_info p {
+    margin: 0.25rem 0;
+    color: #374151;
+    font-size: 1rem;
+}
+
+.mos_order_summary {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+.mos_order_summary p {
+    margin: 0;
+    color: #555;
+    font-size: 1rem;
+}
+
+.mos_completed_time {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.mos_empty_order {
+    text-align: center;
+    padding: 3rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.mos_empty_order p {
+    color: #666;
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.mos_go_shopping_btn {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.mos_go_shopping_btn:hover {
+    background-color:#007bff;
+}
+
+.mos_login_prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 60vh;
+    text-align: center;
+    padding: 2rem;
+}
+
+.mos_login_prompt h2 {
+    color: #333;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+}
+
+/* ====== 響應式設計 ====== */
+@media (max-width: 768px) {
+    .hamburger {
+        display: block;
+        order: 2;
+    }
+
+    .mos_navbar {
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        min-height: auto;
+        position: relative;
+    }
+        
+    .title {
+        margin: 0;
+        order: 1;
+        flex: 1;
+    }
+
+    .mos_navbar_container {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background-color: whitesmoke;
+        z-index: 999;
+        border-radius: 4px;
+        min-width: 200px;
+        border: 1px solid #e5e7eb;
+    }
+    
+    .mos_navbar_container.menu_open {
+        display: flex;
+        flex-direction: column;
+        padding: 10px 0;
+    }
+    
+    .mos_nav_menu {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .mos_menu_list {
+        padding: 12px 20px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .mos_menu_list:last-child {
+        border-bottom: none;
+    }
+    
+    .mos_menu_list a:hover {
+        background-color: #f5f5f5;
+    }
+
+    .mos_user_info {
+        margin: 0;
+        margin-right: 20px;
+        order: 3;
+    }
+
+    .mos_order_content {
+        padding: 1rem;
+        margin-top: 70px;
+    }
+
+    .mos_order_header h1 {
+        font-size: 1.5rem;
+    }
+
+    .mos_tab_buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .mos_tab_btn {
+        padding: 0.6rem 1.5rem;
+        font-size: 0.9rem;
+    }
+
+    .mos_order_header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .mos_order_summary {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .mos_status_filter {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+
+    .mos_card_info {
+        padding: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .mos_navbar {
+        gap: 10px;
+        padding: 8px;
+    }
+    
+    .title a span {
+        font-size: 16px;
+    }
+    
+    .mos_nav_menu {
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .mos_menu_list a {
+        font-size: 14px;
+        padding: 6px 10px;
+    }
+
+    .mos_order_content {
+        padding: 0.5rem;
+    }
+
+    .mos_order_card {
+        padding: 1rem;
+    }
+
+    .mos_order_header h1 {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 320px) {
+    .title a span {
+        font-size: 14px;
+    }
+    
+    .mos_menu_list a {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+
+    .mos_tab_btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+
+    .mos_order_card {
+        padding: 0.75rem;
+    }
+}

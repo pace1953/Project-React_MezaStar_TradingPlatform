@@ -125,7 +125,7 @@
     font-weight: 700;
     color: #333;
     text-align: center;
-    border-bottom: 2px solid #6366f1;
+    border-bottom: 2px solid #007bff;
     padding-bottom: 15px;
 }
 
@@ -225,7 +225,7 @@
 
 .quantity_button_decrease:hover:not(:disabled),
 .quantity_button_increase:hover {
-    background-color: #6366f1;
+    background-color: #007bff;
     color: white;
 }
 
@@ -349,7 +349,7 @@
 .cart_continue_shopping {
     display: inline-block;
     padding: 12px 24px;
-    background-color: #6366f1;
+    background-color: #007bff;
     color: white;
     text-decoration: none;
     border-radius: 6px;
@@ -358,7 +358,8 @@
 }
 
 .cart_continue_shopping:hover {
-    background-color: #4f46e5;
+    color: #007bff;
+    background-color: white;
 }
 
 /* ====== 響應式設計 ====== */

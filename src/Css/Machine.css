@@ -1,0 +1,205 @@
+.mac_container {
+    width: 100%;
+    margin: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 1000;
+}
+
+.mac_navbar {
+    align-items: center;
+    width: 100%;
+    min-height: 4rem;
+    padding: .5rem;
+    display: flex;
+    gap: 50px;
+    justify-content: space-between;
+    background-color: whitesmoke;
+}
+
+.title {
+    margin-left: 20px;
+}
+
+.title a {
+    color: black;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.mac_navbar_container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    flex: 1;
+    margin-right: -20px;
+}
+
+.hamburger {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px;
+    color: #333;
+}
+
+.mac_nav_menu {
+    display: flex;
+    margin: 0;
+    list-style: none;
+    padding: 0;
+}
+
+.mac_menu_list {
+    display: flex;
+    padding: 0px 10px;
+}
+
+.mac_menu_list a {
+    text-decoration: none;
+    color: #333;
+    padding: 8px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.mac_menu_list .home_page_links {
+    font-weight: bolder;
+}
+
+.mac_menu_list .machine_position_page_links {
+    cursor: default;
+    color: #6366f1;
+}
+
+.mac_menu_list .home_page_links,
+.mac_menu_list .myorder_page_links {
+    cursor: pointer;
+}
+
+.mac_menu_list .home_page_links:hover, 
+.mac_menu_list .myorder_page_links:hover, 
+.mac_menu_list .cart_page_links:hover {
+    background-color: #e9ecef;
+}
+
+.mac_user_info {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.mac_user_info .username {
+    font-weight: 600;
+    color: #6366f1;
+    font-size: 16px;
+}
+
+
+/* ====== 響應式設計 ====== */
+@media (max-width: 768px) {
+
+    .hamburger {
+        display: block;
+        order: 2;
+    }
+    
+    .mac_navbar {
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        min-height: auto;
+        position: relative;
+    }
+    
+    .title {
+        margin: 0;
+        order: 1;
+        flex: 1;
+    }
+    
+    .mac_navbar_container {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background-color: whitesmoke;
+        z-index: 999;
+        border-radius: 4px;
+        min-width: 200px;
+        border: 1px solid #e5e7eb;
+    }
+    
+    .mac_navbar_container.menu-open {
+        display: flex;
+        flex-direction: column;
+        padding: 10px 0;
+    }
+    
+    .mac_nav_menu {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .mac_menu_list {
+        padding: 12px 20px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .mac_menu_list:last-child {
+        border-bottom: none;
+    }
+    
+    .mac_menu_list a:hover {
+        background-color: #f5f5f5;
+    }
+
+    .mac_user_info {
+        margin: 0;
+        margin-right: 20px;
+        order: 3;
+    }
+
+}
+
+@media (max-width: 480px) {
+    .mac_navbar {
+        gap: 10px;
+        padding: 8px;
+    }
+    
+    .title a span {
+        font-size: 16px;
+    }
+    
+    .mac_nav_menu {
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .mact_menu_list a {
+        font-size: 14px;
+        padding: 6px 10px;
+    }
+}
+
+@media (max-width: 320px) {
+    .title a span {
+        font-size: 14px;
+    }
+    
+    .mac_menu_list a {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+}
