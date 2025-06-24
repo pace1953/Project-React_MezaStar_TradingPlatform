@@ -23,6 +23,18 @@ export const ContextProvider = ({ children }) => {
     const closeRegisterModal = () => setRegisterModalIsOpen(false);
     const openSellModal = () => setSellModalIsOpen(true);
     const closeSellModal = () => setSellModalIsOpen(false);
+    const openMyCardsModal = () => setMyCardsModalIsOpen(true);
+    const closeMyCardsModal = () => {
+        setMyCardsModalIsOpen(false);
+        setEditingCard(null);
+        setEditForm({
+            cardName: '',
+            series: '',
+            starLevel: '',
+            price: '',
+            quantity: ''
+        });
+    };
 
     // 登入, 註冊
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -43,6 +55,19 @@ export const ContextProvider = ({ children }) => {
 
     // 賣卡匣
     const [sellForm, setSellForm] = useState({cardName: '', series: '', starLevel: '', price: '', quantity: ''});
+
+    // 顯示使用者的卡匣
+    const [myCardsmodalIsOpen, setMyCardsModalIsOpen] = useState(false);
+    const [myCards, setMyCards] = useState([]);
+    const [editingCard, setEditingCard] = useState(null);
+    const [editForm, setEditForm] = useState({
+        cardName: '',
+        series: '',
+        starLevel: '',
+        price: '',
+        quantity: ''
+    });
+
 
     // 紀錄搜尋後的狀態
     const [hasSearched, setHasSearched] = useState(false);
@@ -554,13 +579,163 @@ export const ContextProvider = ({ children }) => {
         }
     };
 
+    // 使用者販賣的卡匣資訊--------------------
+    // 我的卡匣相關方法
+    const handleLoadMyCards = async () => {
+        if (!isLoggedIn) return;
+
+        try {
+            const res = await fetch('http://localhost:8888/rest/cards/myCards', {
+                method: 'GET',
+                credentials: 'include'
+            });
+
+            const resData = await res.json();
+            if (res.ok && resData.status === 200) {
+                setMyCards(resData.data || []);
+            } else {
+                console.error('載入我的卡匣失敗:', resData.message);
+                setMyCards([]);
+            }
+        } catch (err) {
+            console.error('載入我的卡匣錯誤:', err);
+            setMyCards([]);
+        }
+    };
+
+    const handleMyCardsModal = () => {
+        if (isLoggedIn) {
+            handleLoadMyCards();
+            openMyCardsModal();
+        } else {
+            alert('請先登入');
+            openModal();
+        }
+    };
+
+    const handleEditCard = (card) => {
+        setEditingCard(card);
+        setEditForm({
+            cardName: card.cardName,
+            series: card.series,
+            starLevel: card.starLevel,
+            price: card.price,
+            quantity: card.availableQuantity || card.quantity 
+        });
+    };
+
+    const handleEditFormChange = (e) => {
+        const { name, value } = e.target;
+        setEditForm(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleUpdateCard = async (e) => {
+        e.preventDefault();
+        
+        if (!editingCard) return;
+        
+        if (!editForm.cardName || !editForm.series || !editForm.starLevel || !editForm.price || !editForm.quantity) {
+            alert('請填寫所有欄位');
+            return;
+        }
+        
+        if (parseInt(editForm.price) <= 0) {
+            alert('價格必須大於 0');
+            return;
+        }
+
+        if (parseInt(editForm.quantity) <= 0) {
+            alert('數量必須大於 0');
+            return;
+        }
+        
+        try {
+            const res = await fetch(`http://localhost:8888/rest/cards/${editingCard.cardId}`, {
+                method: 'PUT',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    cardName: editForm.cardName,
+                    series: editForm.series,
+                    starLevel: editForm.starLevel,
+                    price: parseInt(editForm.price),
+                    quantity: parseInt(editForm.quantity),
+                    availableQuantity: parseInt(editForm.quantity)
+                })
+            });
+
+            const resData = await res.json();
+            if (res.ok && resData.status === 200) {
+                alert('卡匣更新成功！');
+                setEditingCard(null);
+                setEditForm({
+                    cardName: '',
+                    series: '',
+                    starLevel: '',
+                    price: '',
+                    quantity: ''
+                });
+                // 重新載入我的卡匣
+                handleLoadMyCards();
+                
+                // 如果有搜尋結果，也重新搜尋以更新顯示
+                if (hasSearched) {
+                    const searchCriteria = {
+                        series: searchForm.series,
+                        starLevel: searchForm.starLevel,
+                        keyword: searchForm.cardName,
+                        minPrice: minPrice,
+                        maxPrice: maxPrice
+                    };
+                    
+                    // 檢查是否有搜尋條件，如果有就重新搜尋
+                    const hasSearchCriteria = Object.values(searchCriteria).some(value => 
+                        value !== null && value !== undefined && value !== '' && value !== 0
+                    );
+                    
+                    if (hasSearchCriteria) {
+                        await searchByMultipleCriteria(searchCriteria);
+                    }
+                }
+            } else {
+                alert('更新失敗：' + resData.message);
+            }
+        } catch (err) {
+            alert('更新錯誤: ' + err.message);
+        }
+    };
+
+    const handleDeleteCard = async (cardId) => {
+        if (!window.confirm('確定要刪除這張卡匣嗎？')) {
+            return;
+        }
+        
+        try {
+            const res = await fetch(`http://localhost:8888/rest/cards/${cardId}`, {
+                method: 'DELETE',
+                credentials: 'include'
+            });
+
+            const resData = await res.json();
+            if (res.ok && resData.status === 200) {
+                alert('卡匣刪除成功！');
+                // 重新載入我的卡匣
+                handleLoadMyCards();
+            } else {
+                alert('刪除失敗：' + resData.message);
+            }
+        } catch (err) {
+            alert('刪除錯誤: ' + err.message);
+        }
+    };
+
     // 訂單--------------------------------------------------
     // 買家訂單
     const handleBuyerOrders = async () => {
         if(!isLoggedIn) return;
 
         try {
-            const res = await fetch('http://localhost:8888/rest/orders/my-orders',{
+            const res = await fetch('http://localhost:8888/rest/orders/buyer',{
                 method: 'GET',
                 credentials: 'include'
             });
@@ -583,9 +758,9 @@ export const ContextProvider = ({ children }) => {
         if(!isLoggedIn) return;
 
         try{
-            let url = 'http://localhost:8888/rest/orders/seller/my-sales';
+            let url = 'http://localhost:8888/rest/orders/seller';
             if(selectedStatus !== 'all'){
-                url = `http://localhost:8888/rest/orders/seller/my-sales/status/${selectedStatus}`;
+                url = `http://localhost:8888/rest/orders/seller/status/${selectedStatus}`;
             }
 
             const res = await fetch(url, {
@@ -650,6 +825,16 @@ export const ContextProvider = ({ children }) => {
         selectedStatus,
         setSelectedStatus,
 
+        // 賣家的卡匣資訊
+        myCardsmodalIsOpen,
+        setMyCardsModalIsOpen,
+        myCards,
+        setMyCards,
+        editingCard,
+        setEditingCard,
+        editForm,
+        setEditForm,
+
         // Modal方法
         openModal,
         closeModal,
@@ -704,6 +889,15 @@ export const ContextProvider = ({ children }) => {
         handleBuyerOrders,
         handleSellerOrders,
 
+        // 賣家卡匣方法
+        openMyCardsModal,
+        closeMyCardsModal,
+        handleLoadMyCards,
+        handleMyCardsModal,
+        handleEditCard,
+        handleEditFormChange,
+        handleUpdateCard,
+        handleDeleteCard,
 
 
     };

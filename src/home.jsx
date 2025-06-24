@@ -79,6 +79,24 @@ function Home() {
         handleRegisterChange,
         handleRegisterSubmit,
         handleLogout,
+
+        // 賣家的卡匣狀態
+        myCardsmodalIsOpen,
+        myCards,
+        editingCard,
+        editForm,
+        setEditingCard,
+        setEditForm,
+
+        // 賣家的卡匣方法
+        
+        closeMyCardsModal,
+        handleMyCardsModal,
+        handleEditCard,
+        handleEditFormChange,
+        handleUpdateCard,
+        handleDeleteCard,
+    
     } = useContextAPI();
 
     const location = useLocation();
@@ -235,10 +253,155 @@ function Home() {
                     </form>
 
                 </Modal>
+                <Modal className='my_cards_modal' overlayClassName='my_cards_modal_overlay' isOpen={myCardsmodalIsOpen} onRequestClose={closeMyCardsModal}>
+                    <h2 className='modal_h2'>我的卡匣管理</h2>
+                    <button type="button" className='modal_close_button' onClick={closeMyCardsModal}>X</button>
+                    
+                    <div className='my_cards_list'>
+                        {myCards.length > 0 ? (
+                            <table className='my_cards_table'>
+                                <thead>
+                                    <tr>
+                                        <th>卡匣名稱</th>
+                                        <th>系列</th>
+                                        <th>星級</th>
+                                        <th>數量</th>
+                                        <th>單價</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {myCards.map(card => (
+                                        <tr key={card.cardId}>
+                                            <td>{card.cardName}</td>
+                                            <td>{card.series}</td>
+                                            <td>{card.starLevel === 'Special' ? 'Special' : '★'.repeat(parseInt(card.starLevel))}</td>
+                                            <td>{card.quantity}</td>
+                                            <td>NT$ {card.price.toLocaleString()}</td>
+ 
+                                            <td>
+                                                <button 
+                                                    className='edit_button' 
+                                                    onClick={() => handleEditCard(card)}
+                                                >
+                                                    編輯
+                                                </button>
+                                                <button 
+                                                    className='delete_button' 
+                                                    onClick={() => handleDeleteCard(card.cardId)}
+                                                >
+                                                    刪除
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        ) : (
+                            <div className='no_my_cards'>
+                                <p>您還沒有上架任何卡匣</p>
+                            </div>
+                        )}
+                    </div>
+                    
+                    {editingCard && (
+                        <div className='edit_form_container'>
+                            <h3>編輯卡匣</h3>
+                            <form onSubmit={handleUpdateCard} className='edit_form'>
+                                <div className='edit_form_group'>
+                                    <label>卡匣名稱：</label>
+                                    <input 
+                                        type="text" 
+                                        name="cardName"
+                                        value={editForm.cardName}
+                                        onChange={handleEditFormChange}
+                                        required
+                                    />
+                                </div>
+                                
+                                <div className='edit_form_group'>
+                                    <label>卡匣系列：</label>
+                                    <select 
+                                        name="series"
+                                        value={editForm.series}
+                                        onChange={handleEditFormChange}
+                                        required
+                                    >
+                                        <option value="">請選擇系列</option>
+                                        <option value="星塵第1彈">星塵第1彈</option>
+                                        <option value="星塵第2彈">星塵第2彈</option>
+                                        <option value="MEZASTAR活動卡匣">MEZASTAR活動卡匣</option>
+                                    </select>
+                                </div>
+                                
+                                <div className='edit_form_group'>
+                                    <label>卡匣星級：</label>
+                                    <select 
+                                        name="starLevel"
+                                        value={editForm.starLevel}
+                                        onChange={handleEditFormChange}
+                                        required
+                                    >
+                                        <option value="">請選擇星級</option>
+                                        <option value="5">5星</option>
+                                        <option value="6">6星</option>
+                                        <option value="Special">Special</option>
+                                    </select>
+                                </div>
+
+                                <div className='edit_form_group'>
+                                    <label>卡匣數量：</label>
+                                    <input 
+                                        type="number" 
+                                        name="quantity"
+                                        value={editForm.quantity || editForm.availableQuantity}
+                                        onChange={handleEditFormChange}
+                                        min="1"
+                                        required
+                                    />
+                                </div>
+                                
+                                <div className='edit_form_group'>
+                                    <label>售價 (NT$)：</label>
+                                    <input 
+                                        type="number" 
+                                        name="price"
+                                        value={editForm.price}
+                                        onChange={handleEditFormChange}
+                                        min="1"
+                                        required
+                                    />
+                                </div>
+                                
+                                <div className='edit_form_buttons'>
+                                    <button type="submit" className='update_button'>
+                                        更新
+                                    </button>
+                                    <button type="button" 
+                                        onClick={() => {
+                                            setEditingCard(null);
+                                            setEditForm({
+                                                cardName: '',
+                                                series: '',
+                                                starLevel: '',
+                                                price: '',
+                                                quantity: ''
+                                            });
+                                        }} 
+                                        className='cancel_button'>
+                                    取消
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    )}
+                </Modal>
+
             </div>
                 
             <div className='cardSearch_container'>
-                <h2 className='cardSearch_title'>卡匣交易</h2>
+                <h2 className='cardSearch_title'>卡匣交易<button className='my_cards_button' onClick={handleMyCardsModal}>我的卡匣</button></h2>
+                
                 <form onSubmit={handleSearch} className='cardSearch_form'>
                 <div className='cardSearch_input_container'>
                     
@@ -255,13 +418,13 @@ function Home() {
                     </div>
 
                     <div className='cardSearch_field'>
-                        <label className='cardSearch_label'>卡匣星數</label>
+                        <label className='cardSearch_label'>卡匣星級</label>
                         <select 
                             name="starLevel" 
                             value={searchForm.starLevel} 
                             onChange={handleSearchChange}
                             className='cardSearch_select'>
-                            <option value="">請選擇星數</option>
+                            <option value="">請選擇星級</option>
 
                             <option value="5">5星</option>
                             <option value="6">6星</option>
@@ -343,7 +506,7 @@ function Home() {
                                                 </td>
 
                                                 <td className='card_selling_number'>
-                                                    {card.availableQuantity || card.quantity || 1}
+                                                    {card.availableQuantity || card.quantity}
                                                 </td>
 
                                                 <td className='card_price'>NT$ {card.price.toLocaleString()}</td>

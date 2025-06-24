@@ -43,15 +43,6 @@ function MyOrders() {
         setSelectedStatus('all');
     }
 
-    // 重新載入訂單
-    const handleRefresh = () =>{
-        if(activeTab === 'buyer'){
-            handleBuyerOrders();
-        } else{
-            handleSellerOrders();
-        }
-    }
-
     // 訂單狀態的篩選變更
     const handleStatusChange = (s) =>{
         setSelectedStatus(s);
@@ -114,10 +105,24 @@ function MyOrders() {
                                         {order.orderItems.map((item) => (
                                             <div key={item.orderItemId} className='mos_order_item'>
                                                 <p>
-                                                    <strong>卡匣名稱:</strong> {item.cardName || '無資料'}
-                                                    (<strong>卡匣系列:</strong> {item.series || '無資料'} 
-                                                     ,<strong> {item.starLevel || '無資料'}星</strong>) 
-                                                    x{item.quantity} = NT$ {item.subtotal}
+                                                    <strong>卡匣名稱: </strong> {item.cardName}
+                                                </p>
+
+                                                <p>
+                                                    <strong>卡匣系列: </strong> {item.series}
+                                                </p>
+                                                
+                                                <p>
+                                                    <strong>卡匣星級: {item.starLevel}</strong>
+                                                </p>
+
+                                                <p>
+                                                    <strong>數量: {item.quantity}</strong> 
+                                                    <strong>, 總計:NT$ {item.subtotal}</strong>
+                                                </p>
+
+                                                <p>
+                                                    <strong>---------</strong>
                                                 </p>
                                             </div>
                                         ))}
